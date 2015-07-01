@@ -24,12 +24,14 @@ private String proxyToken = "YOUR_TOKEN_HERE" ;
 
 To get a token, please sign up for free to the <a href="https://portal.streamdata.io/" target="_blank">streamdata.io portal</a> and follow the guidelines. You will find your token in the 'security' section.
 
+## Project dependencies
 
-The application dependancies are available on GitHub
 
-<a href="https://github.com/FasterXML/jackson-databind" target="_blank">https://github.com/FasterXML/jackson-databind</a>
-<a href="https://github.com/fge/json-patch" target="_blank">https://github.com/fge/json-patch</a>
-<a href="https://github.com/tylerjroach/eventsource-android/" target="_blank">https://github.com/tylerjroach/eventsource-android/</a>
+The application dependencies are available on GitHub
+
+* <a href="https://github.com/FasterXML/jackson-databind" target="_blank">https://github.com/FasterXML/jackson-databind</a>
+* <a href="https://github.com/fge/json-patch" target="_blank">https://github.com/fge/json-patch</a>
+* <a href="https://github.com/tylerjroach/eventsource-android/" target="_blank">https://github.com/tylerjroach/eventsource-android/</a>
 
 
 If you have any questions or feedback, feel free to contact us at <a href="mailto://support@streamdata.io">support@streamdata.io</a>
