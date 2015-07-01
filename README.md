@@ -15,10 +15,10 @@ To run the sample, you can clone this GitHub repository, and then open the proje
 
 Before running the project on a phone or emulator, you have to paste a token to be authenticated by the proxy.
 
-Modify StockMarketList.java on line 47 :
+Modify StockMarketList.java on line 44 :
 
 ```
-private String proxyToken = "YOUR_TOKEN_HERE" ;
+private final String streamdataioAppToken = "YOUR_TOKEN_HERE";
 ```
 
 To get a token, please sign up for free to the <a href="https://portal.streamdata.io/" target="_blank">streamdata.io portal</a> and follow the guidelines. You will find your token in the 'security' section.
