@@ -44,7 +44,7 @@ public class StockMarketList extends StockMarketActivity {
     private final ObjectMapper mapper = new ObjectMapper();
 
     private String apiURL = "https://streamdata.motwin.net/http://demo-streamdataio.rhcloud.com/stockmarket/prices";
-    private String proxyToken = "MDM3MzM3OTQtMWRmZC00MTg1LWI2YzEtMGFmYWE1MjlhMmQ3";
+    private String proxyToken = "YOUR_TOKEN_HERE";
 
     /**
      * Android application creation callback.
