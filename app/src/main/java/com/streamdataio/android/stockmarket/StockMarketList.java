@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,14 +38,18 @@ import tylerjroach.com.eventsource_android.MessageEvent;
  */
 public class StockMarketList extends StockMarketActivity {
 
+    private final String TAG = StockMarketList.class.getName();
+
+    private final String streamdataioProxyPrefix = "https://streamdata.motwin.net/";
+    private final String streamdataioAppToken = "YOUR_TOKEN_HERE";
+    private final String myApi = "http://demo-streamdataio.rhcloud.com/stockmarket/prices";
+
+    private final ObjectMapper mapper = new ObjectMapper();
+
     private JsonNode data;
     private ListView listView;
     private MyListAdapter listAdapter;
     private EventSource eventSource;
-    private final ObjectMapper mapper = new ObjectMapper();
-
-    private String apiURL = "https://streamdata.motwin.net/http://demo-streamdataio.rhcloud.com/stockmarket/prices";
-    private String proxyToken = "YOUR_TOKEN_HERE";
 
     /**
      * Android application creation callback.
@@ -75,66 +80,58 @@ public class StockMarketList extends StockMarketActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        System.out.println("onStart() callback");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        System.out.println("onStop() callback");
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
-        System.out.println("onResume() callback ");
 
         // Connection to EventSource
-        this.connect();
+        connect();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        System.out.println("onPause() callback");
 
         // Disconnection from EventSource
-        this.disconnect();
+        disconnect();
     }
 
     /**
      * Create the EventSource object & start listening SSE incoming messages
      */
     private void connect() {
-
-        // Add the Streamdata.io authentication token
+        // Create headers : Add the streamdata.io app token
         Map<String, String> headers = new HashMap<String, String>();
-        headers.put("X-Sd-Token", this.proxyToken);
+        headers.put("X-Sd-Token", streamdataioAppToken);
 
         // Create the EventSource with API URL & Streamdata.io authentication token
         try {
-            this.eventSource = new EventSource(new URI(this.apiURL), new SSEHandler(), headers);
+            String targetUrl = streamdataioProxyPrefix + myApi;
+            eventSource = new EventSource(new URI(targetUrl), new SSEHandler(), headers);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
 
         // Start data receiving
-        this.eventSource.connect();
+        eventSource.connect();
     }
 
     /**
      * Closes the event source connection and dereference the EventSource object
      */
     private void disconnect() {
-
         // Disconnect the eventSource Handler
-        if (this.eventSource.isConnected())
-        this.eventSource.close();
+        if (eventSource!= null && eventSource.isConnected()) {
+            try {
+                eventSource.close();
+            } catch (Exception e) {
+                if ( Log.isLoggable(TAG, Log.ERROR)) {
+                    Log.e(TAG, "Error on closing SSE", e);
+                }
+            }
+        }
 
         // Dereferencing variable
-        this.eventSource = null;
+        eventSource = null;
     }
 
 
@@ -149,7 +146,9 @@ public class StockMarketList extends StockMarketActivity {
          */
         @Override
         public void onConnect() {
-            System.out.println("SSE Connected");
+            if (Log.isLoggable(TAG, Log.DEBUG)) {
+               Log.d(TAG, "SSE Connected");
+            }
         }
 
         /**
@@ -160,11 +159,8 @@ public class StockMarketList extends StockMarketActivity {
          */
         @Override
         public void onMessage(String event, MessageEvent message) throws IOException {
-
-
             if ("data".equals(event)) {
                 // SSE message is a snapshot
-                System.out.println("EventSource onData()");
                 data = mapper.readTree(message.data);
 
                 // Refresh UI
@@ -179,7 +175,6 @@ public class StockMarketList extends StockMarketActivity {
 
             } else if ("patch".equals(event)) {
                 // SSE message is a patch
-                System.out.println("EventSource onPatch()");
                 try {
                     JsonNode patchNode = mapper.readTree(message.data);
                     JsonPatch patch = JsonPatch.fromJson(patchNode);
@@ -198,7 +193,7 @@ public class StockMarketList extends StockMarketActivity {
                     e.printStackTrace();
                 }
             } else {
-                throw new RuntimeException("Wrong SSE message!");
+                throw new RuntimeException("Unexpected SSE message: " + event);
             }
         }
 
@@ -207,10 +202,9 @@ public class StockMarketList extends StockMarketActivity {
          */
         @Override
         public void onError(Throwable t) {
-            System.out.println("EventSource onError() !");
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            t.printStackTrace(pw);
+            if (Log.isLoggable(TAG, Log.ERROR)) {
+                Log.e(TAG, "SSE Error", t);
+            }
         }
 
         /**
@@ -218,7 +212,9 @@ public class StockMarketList extends StockMarketActivity {
          */
         @Override
         public void onClosed(boolean willReconnect) {
-            System.out.println("SSE Closed - reconnect? " + willReconnect);
+            if (Log.isLoggable(TAG, Log.DEBUG)) {
+                Log.d(TAG, "SSE Closed - reconnect? " + willReconnect);
+            }
         }
     }
 
