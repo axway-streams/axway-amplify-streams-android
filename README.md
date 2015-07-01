@@ -4,8 +4,13 @@ This android application shows how to use the <a href="http://streamdata.io" tar
 Streamdata.io allows to get data pushed from various sources and use them in your application.
 This sample application provides 5 seconds random refreshed values pushed by Streamdata.io proxy using Server-sent events.
 
+## License
+
+* [Apache Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
+
+
 To run the sample, you can clone this GitHub repository, and then open the project with Android Studio.
------
+
 
 ## Add the Streamdata.io authentication token
 
@@ -14,11 +19,11 @@ Before running the project on a phone or emulator, you have to paste a token to 
 Modify StockMarketList.java on line 47 :
 
 ```
-private String proxyToken = "YOUR_TOKEN_HERE"
+private String proxyToken = "YOUR_TOKEN_HERE" ;
 ```
 
 To get a token, please sign up for free to the <a href="https://portal.streamdata.io/" target="_blank">streamdata.io portal</a> and follow the guidelines. You will find your token in the 'security' section.
------
+
 
 The application dependancies are available on GitHub
 
