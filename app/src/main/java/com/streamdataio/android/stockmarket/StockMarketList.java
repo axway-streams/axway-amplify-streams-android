@@ -19,8 +19,6 @@ import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -38,10 +36,10 @@ import tylerjroach.com.eventsource_android.MessageEvent;
  */
 public class StockMarketList extends StockMarketActivity {
 
-    private final String TAG = StockMarketList.class.getName();
+    private final String TAG = "StockMarketList";
 
     private final String streamdataioProxyPrefix = "https://streamdata.motwin.net/";
-    private final String streamdataioAppToken = "YOUR_TOKEN_HERE";
+    private final String streamdataioAppToken = "YOUR_STREAMDATA_APP_TOKEN_HERE";
     private final String myApi = "http://demo-streamdataio.rhcloud.com/stockmarket/prices";
 
     private final ObjectMapper mapper = new ObjectMapper();
@@ -106,7 +104,7 @@ public class StockMarketList extends StockMarketActivity {
         // Create the EventSource with API URL & Streamdata.io authentication token
         try {
             String targetUrl = streamdataioProxyPrefix + myApi;
-            eventSource = new EventSource(new URI(targetUrl), new SSEHandler(), headers);
+            eventSource = new EventSource(new URI(targetUrl), new URI(myApi), new SSEHandler(), headers);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

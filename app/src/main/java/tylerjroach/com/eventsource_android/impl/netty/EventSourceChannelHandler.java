@@ -38,10 +38,10 @@ public class EventSourceChannelHandler extends SimpleChannelUpstreamHandler impl
 
     private final EventSourceHandler eventSourceHandler;
     private final ClientBootstrap bootstrap;
-    private final URI uri;
     private final Map<String, String> headers;
     private final EventStreamParser messageDispatcher;
 
+    private URI uri, requestUri;
     private final Timer timer = new HashedWheelTimer();
     private Channel channel;
     private boolean reconnectOnClose = true;
@@ -51,6 +51,11 @@ public class EventSourceChannelHandler extends SimpleChannelUpstreamHandler impl
     private boolean headerDone;
     private Integer status;
     private AtomicBoolean reconnecting = new AtomicBoolean(false);
+
+    public EventSourceChannelHandler(EventSourceHandler eventSourceHandler, long reconnectionTimeMillis, ClientBootstrap bootstrap, URI uri, URI requestUri, Map<String, String> headers){
+        this(eventSourceHandler, reconnectionTimeMillis, bootstrap,uri, headers);
+        this.requestUri = requestUri;
+    }
 
     public EventSourceChannelHandler(EventSourceHandler eventSourceHandler, long reconnectionTimeMillis, ClientBootstrap bootstrap, URI uri, Map<String, String> headers) {
         this.eventSourceHandler = eventSourceHandler;
@@ -68,7 +73,10 @@ public class EventSourceChannelHandler extends SimpleChannelUpstreamHandler impl
 
     @Override
     public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
-        HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, uri.toString());
+
+        //URI uri2 = new URI(uri.toString().substring(uri.toString().lastIndexOf("/http")))     ;
+
+        HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/"+requestUri.toString());
         request.addHeader(Names.ACCEPT, "text/event-stream");
 
         if (headers != null) {
@@ -76,7 +84,6 @@ public class EventSourceChannelHandler extends SimpleChannelUpstreamHandler impl
                 request.addHeader(entry.getKey(), entry.getValue());
             }
         }
-
         request.addHeader(Names.HOST, uri.getHost());
         request.addHeader(Names.ORIGIN, uri.getScheme() + "://" + uri.getHost());
         request.addHeader(Names.CACHE_CONTROL, "no-cache");
