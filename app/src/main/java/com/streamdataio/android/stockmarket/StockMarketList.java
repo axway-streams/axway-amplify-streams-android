@@ -36,6 +36,7 @@ import tylerjroach.com.eventsource_android.MessageEvent;
  */
 public class StockMarketList extends StockMarketActivity {
 
+    
     private final String TAG = "StockMarketList";
 
     private final String streamdataioProxyPrefix = "https://streamdata.motwin.net/";
