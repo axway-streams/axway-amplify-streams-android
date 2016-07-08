@@ -56,7 +56,7 @@ public class StockMarketList extends StockMarketActivity {
     private final String TAG = "StockMarketList";
 
     private final String streamdataioProxyPrefix = "https://streamdata.motwin.net/";
-    private final String streamdataioAppToken = "YOUR_STREAMDATA_APP_TOKEN_HERE";
+    private final String streamdataioAppToken = "ZTUxYjBiZGEtZjEzOS00MDExLWE5ODktYjAxOTI4ZDhkZDk5";
     private final String myApi = "http://stockmarket.streamdata.io/prices";
 
     private final ObjectMapper mapper = new ObjectMapper();
@@ -127,7 +127,7 @@ public class StockMarketList extends StockMarketActivity {
         }
 
         // Start data receiving
-        eventSource.connect();
+        //eventSource.connect();
     }
 
     /**

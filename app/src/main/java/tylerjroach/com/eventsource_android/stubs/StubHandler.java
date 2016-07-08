@@ -18,16 +18,6 @@ public class StubHandler implements ConnectionHandler, EventSourceHandler {
     private List<Throwable> errors = new ArrayList<Throwable>();
 
     @Override
-    public void setReconnectionTimeMillis(long reconnectionTimeMillis) {
-        this.reconnectionTimeMillis = reconnectionTimeMillis;
-    }
-
-    @Override
-    public void setLastEventId(String lastEventId) {
-        this.lastEventId = lastEventId;
-    }
-
-    @Override
     public void onConnect() throws Exception {
         connected = true;
     }
@@ -51,8 +41,18 @@ public class StubHandler implements ConnectionHandler, EventSourceHandler {
         return reconnectionTimeMillis;
     }
 
+    @Override
+    public void setReconnectionTimeMillis(long reconnectionTimeMillis) {
+        this.reconnectionTimeMillis = reconnectionTimeMillis;
+    }
+
     public String getLastEventId() {
         return lastEventId;
+    }
+
+    @Override
+    public void setLastEventId(String lastEventId) {
+        this.lastEventId = lastEventId;
     }
 
     public boolean isConnected() {
